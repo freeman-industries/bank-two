@@ -1,0 +1,259 @@
+*{
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+.circular-shadow{
+  border-radius:999px;
+  box-shadow: 0px 1px 1px rgb(249,38,144), -1px 0px 1px rgb(174,129,225), 0px -1px 1px rgb(102,217,239), 1px 0px 1px rgb(166,226,46);
+  background:#FFF;
+  font-family:Avenir;
+  font-size:14px;
+  font-weight:normal;
+  color:#888;
+  text-align:center;
+}
+
+html, body{
+  margin:0px;
+  padding:0px;
+  background:#FAFAFA;
+  overflow:hidden;
+}
+
+header{
+  height:80px;
+  line-height:80px;
+  font-size:18px;
+  font-family:Avenir;
+  padding:0px 15px;
+  background:#FFF;
+  color:#888;
+  border-bottom:1px solid #F0F0F0;
+  cursor:default;
+  text-align:center;
+  position:relative;
+}
+
+header .logo{
+  font-size:32px;
+
+  position:absolute;
+  top:0px;
+  left:15px;
+
+  text-transform:uppercase;
+  font-family:'ITC Avant Garde Gothic Pro', 'Avenir';
+  font-weight:900;
+}
+
+header .logo span:nth-child(1){
+  color:rgb(249,38,144);
+}
+header .logo span:nth-child(2){
+  color:rgb(174,129,225);
+}
+header .logo span:nth-child(3){
+  color:rgb(102,217,239);
+}
+header .logo span:nth-child(4){
+  color:rgb(166,226,46);
+}
+
+header .user{
+  height:40px;
+  margin-top:18px;
+  line-height:40px;
+
+  padding:0px 20px;
+
+  position:absolute;
+  top:0px;
+  right:15px;
+
+  cursor:pointer;
+}
+
+header .team-name{
+  text-align:center;
+  font-weight:bold;
+  font-size:20px;
+  display:inline-block;
+  color:#555;
+}
+
+.flex{
+  display:flex;
+  height:calc(100vh - 81px);
+}
+
+.menu{
+  width:240px;
+  font-family:Avenir;
+  color:#888;
+  background:#FFF;
+  border-right:1px solid #F0F0F0;
+  line-height:40px;
+}
+
+.menu h4{
+  text-transform:uppercase;
+  font-weight:normal;
+  font-size:14px;
+  margin:15px 0px;
+  margin-bottom:0px;
+  padding:0px 15px;
+  cursor:default;
+}
+
+.menu-item{
+  padding:0px 15px;
+  cursor:pointer;
+  position:relative;
+
+  margin-right:15px;
+  border-top-right-radius:50px;
+  border-bottom-right-radius:50px;
+}
+
+.menu-item:hover{
+  color:#555;
+}
+
+.menu-item.active{
+  background:rgb(249,38,114);
+  color:#FFF;
+  font-weight:bold;
+}
+
+.files-view{
+  flex:1 1;
+  height:100%;
+  overflow:hidden;
+  overflow-y:scroll;
+  background-image:url(/assets/images/files_background.jpg);
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background:#FAFAFA;
+}
+
+section{
+  padding:0px;
+
+  font-size:18px;
+  font-family:"Avenir", "Helvetica Neue", Helvetica, sans-serif;
+  color:#888;
+
+  cursor:default;
+}
+
+section:first-child h2{
+  border-top:none;
+}
+
+section h2{
+  margin:0px;
+  font-size:14px;
+  font-weight:bold;
+  padding:15px;
+  background:#FFF;
+  border-bottom:1px solid #F0F0F0;
+  border-top:1px solid #F0F0F0;
+}
+
+section h3{
+  text-align:center;
+  font-size:16px;
+  font-weight:normal;
+}
+
+section .tiles{
+  text-align:left;
+  padding:20px;
+  padding-bottom:0px;
+}
+
+section .tile{
+  display:inline-block;
+  margin-right:20px;
+  margin-bottom:20px;
+  background:#FFF;
+  /*padding:15px;*/
+  cursor:pointer;
+  vertical-align:middle;
+  border:1px solid #F0F0F0;
+}
+
+section .tile:hover{
+  /*border:1px solid rgb(249,38,114);*/
+}
+
+section .tile .wrapper{
+  display:flex;
+  flex-direction: column;
+  width:200px;
+  height:260px;
+}
+
+section .tile .thumbnail{
+  background-color:#FFF;
+  background-position:center center;
+  background-size:cover;
+  background-repeat:no-repeat;
+
+  flex:1 1;
+
+  position:relative;
+}
+
+section .tile .thumbnail .extension{
+  width:40px;
+  height:60px;
+  background:#F0F0F0;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align:center;
+}
+
+section .tile .thumbnail .extension:after{
+  content:'';
+  background:#FFF;
+  position:absolute;
+  top:-10px;
+  right:-10px;
+  width:20px;
+  height:20px;
+  transform: rotate(45deg);
+}
+
+section .tile .thumbnail .extension:before{
+  content:'';
+  background:#888;
+  position:absolute;
+  top:0px;
+  right:0px;
+  width:14px;
+  height:14px;
+}
+
+section .tile .filename{
+  margin-top:0px;
+  padding:10px;
+  font-size:16px;
+  background:#888;
+  color:#FFF;
+}
+
+
+#downloader{
+  position:fixed;
+  top:-100px;
+  left:-100px;
+  width:0px;
+  height:0px;
+  border:none;
+}
