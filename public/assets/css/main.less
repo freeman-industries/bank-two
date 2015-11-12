@@ -1,0 +1,251 @@
+html, body{
+  margin:0px;
+  padding:0px;
+  background:#FFF;
+
+  font-family:"Avenir", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight:500;
+
+  a{
+    text-decoration:none;
+
+    &:hover{
+      text-decoration:underline;
+    }
+  }
+
+  header{
+    height:80px;
+    line-height:80px;
+    font-size:18px;
+    font-family:Avenir;
+    padding:0px 15px;
+    color:#888;
+    border-bottom:1px solid #F0F0F0;
+    border-top:1px solid #F0F0F0;
+    cursor:default;
+    text-align:center;
+    position:relative;
+
+    -webkit-user-select:none;
+    user-select:none;
+
+    .logo{
+      font-size:32px;
+
+      position:absolute;
+      top:0px;
+      left:15px;
+
+      text-transform:uppercase;
+      font-family:'ITC Avant Garde Gothic Pro', 'Avenir';
+      font-weight:900;
+
+      span:nth-child(1){
+        color:rgb(249,38,144);
+      }
+      span:nth-child(2){
+        color:rgb(174,129,225);
+      }
+      span:nth-child(3){
+        color:rgb(102,217,239);
+      }
+      span:nth-child(4){
+        color:rgb(166,226,46);
+      }
+    }
+
+    .user{
+      height:40px;
+      margin-top:18px;
+      line-height:40px;
+
+      padding:0px 20px;
+
+      position:absolute;
+      top:0px;
+      right:15px;
+
+      cursor:pointer;
+    }
+
+    .central{
+      text-align:center;
+      font-weight:bold;
+      font-size:20px;
+      display:inline-block;
+      color:#555;
+    }
+  }
+
+  button{
+    background: rgb(249,38,144);
+    border-radius:2px;
+
+    font-family:"Avenir", "Helvetica Neue", Helvetica, sans-serif;
+    font-weight:500;
+    color:#FFF;
+
+    font-size:18px;
+
+    padding:5px 10px;
+
+    border:none;
+
+    cursor:pointer;
+
+    -webkit-user-select:none;
+    user-select:none;
+  }
+
+  .alert{
+    padding:10px 20px;
+    background:#F0F0F0;
+
+    color:rgb(249,38,144);
+    text-align:center;
+    font-weight:500;
+    font-size:14px;
+  }
+
+  .title{
+    text-align:left;
+    font-weight:bold;
+    color:#555;
+    font-size:20px;
+    border-bottom:1px solid #F0F0F0;
+    padding:40px 20px;
+    position:relative;
+
+    cursor:default;
+  }
+
+  .profile-info{
+    visibility:hidden;
+
+    text-align:left;
+    font-weight:bold;
+    color:#555;
+    font-size:20px;
+    border-bottom:1px solid #F0F0F0;
+    padding:40px 20px;
+    padding-left:95px;
+    height:60px;
+    line-height:60px;
+    position:relative;
+
+    cursor:default;
+
+    img{
+      margin-right:20px;
+
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      margin-bottom:20px;
+      border:1px solid #F0F0F0;
+
+      box-shadow:0px 0px 40px #F0F0F0;
+
+      position:absolute;
+      top:40px;
+      left:20px;
+    }
+
+    button{
+      margin-left:10px;
+      font-size:13px;
+      vertical-align:middle;
+    }
+  }
+}
+
+
+.links-view{
+  visibility:hidden;
+
+  padding:0px;
+
+  font-size:18px;
+  color:#888;
+
+  cursor:default;
+
+  padding-top:30px;
+
+  &:last-child{
+    padding-bottom:30px;
+  }
+
+  h2{
+    margin:0px;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 20px;
+
+    background:transparent;
+    color:#555;
+  }
+
+  h3{
+    text-align:center;
+    font-size:16px;
+    font-weight:normal;
+  }
+
+  .tiles{
+    text-align:left;
+    padding:0px;
+    list-style-type:none;
+  }
+
+  .tile{
+    display:block;
+    margin:0px;
+    padding:15px 20px;
+    background:#FFF;
+    /*padding:15px;*/
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    &:hover{
+      background:#F0F0F0;
+    }
+
+    a{
+      color:#0724fb;
+      font-size:18px;
+      font-weight:500;
+    }
+
+    .meta{
+      margin-top:5px;
+
+      line-height:30px;
+
+      a{
+        font-size:14px;
+        color:#555;
+
+        display:inline-block;
+        position:relative;
+
+        height:30px;
+        padding-left:30px;
+
+        img{
+          vertical-align:middle;
+          width:24px;
+          height:24px;
+          border-radius:50%;
+          position:absolute;
+          top:3px;
+          left:0px;
+        }
+      }
+    }
+
+  }
+}

@@ -1,15 +1,12 @@
 require('dotenv').load();
 
 var express = require("express");
-var multer = require("multer");
-var mime = require('mime-types');
+var url = require('url');
 var path = require('path');
 var mysql = require('mysql');
-var AWS = require('aws-sdk');
-
-AWS.config.update({accessKeyId: process.env.AWS_KEY, secretAccessKey: process.env.AWS_SECRET, region: process.env.AWS_REGION});
-
-var bucket = new AWS.S3({params: {Bucket: 'freeman-files'}});
+var bodyParser = require('body-parser');
+var expressLess = require('express-less');
+var gravatar = require('gravatar');
 
 var db_config = {
   host     : process.env.DB_HOST,
@@ -19,23 +16,46 @@ var db_config = {
   password : process.env.DB_PASS,
 };
 
-function uploadToS3(file, destFileName, callback) {
-  bucket
-    .upload({
-      ACL: 'public-read',
-      Body: file.buffer,
-      Key: destFileName.toString() + "." + mime.extension(file.mimetype),
-      ContentType: file.mimetype // force download if it's accessed as a top location
-    })
-    .send(callback);
-}
-
-var getFiles = function(callback){
+var getUserData = function(user, callback){
   var connection = mysql.createConnection(db_config);
   connection.connect();
 
-  connection.query('SELECT * FROM `files`', function(err, rows, fields) {
+  connection.query('SELECT email FROM `users` WHERE name=' + connection.escape(user) + ';', function(err, rows, fields) {
     if (err) throw err;
+    if (rows.length < 1) return;
+
+    var email = rows[0].email;
+
+    var obj = {
+      user: user,
+      image: gravatar.url(email, {s: 120}, true)
+    }
+
+    callback(obj);
+
+    connection.end();
+  });
+};
+
+var getLinks = function(user, callback){
+  var connection = mysql.createConnection(db_config);
+  connection.connect();
+
+  var query;
+
+  if(user !== null){
+    query = 'SELECT time, url FROM `links` WHERE user=(SELECT id FROM users WHERE name=' + connection.escape(user) + ');'
+  } else {
+    query = 'SELECT links.url, links.time, users.name, users.email FROM `links` LEFT JOIN `users` ON links.user = users.id ORDER BY links.id'
+  }
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) throw err;
+
+    rows.forEach(function(row){
+      row.image = gravatar.url(row.email, {s: 120}, true);
+      delete row.email
+    });
 
     callback(rows);
 
@@ -43,46 +63,51 @@ var getFiles = function(callback){
   });
 }
 
-var storeFile = function(data_object){
+var storeLink = function(url, user){
   var connection = mysql.createConnection(db_config);
   connection.connect();
 
-  var query = "INSERT INTO `files` (`data`, `time`) VALUES (" + connection.escape(JSON.stringify(data_object)) + ", UNIX_TIMESTAMP());";
+  var user_query = "INSERT INTO `links` (`time`, `url`, `user`) VALUES (UNIX_TIMESTAMP(), " + connection.escape(url) + ", (SELECT id FROM users WHERE name=" + connection.escape(user) + "))";
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(user_query, function(err, rows, fields) {
     if (err) throw err;
+    if (rows.length < 1) return;
+
+    console.log("successfully stored link " + url + " by " + user);
 
     connection.end();
   });
+
 }
-
-//for server storage
-
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     console.log(file.fieldname);
-//     cb(null, file.fieldname + '-' + Date.now() + "." + mime.extension(file.mimetype))
-//   }
-// });
-//
-var upload = multer({
-  // storage: storage
-});
-var uploader = upload.array("file");
 
 var app = express(); //starts up your app
 
 app.use('/assets', express.static('public/assets'));
+app.use('/assets/css', expressLess(path.join(__dirname, '../public/assets/css'), {debug: true}));
 
-app.get("/", function(req,res){
-  res.sendFile('index.html', { root: path.join(__dirname, '../public') });
+app.use(bodyParser());
+
+app.get("/", function(req, res){
+  res.sendFile('home.html', { root: path.join(__dirname, '../public') });
 });
 
-app.get("/files", function(req,res){
-  getFiles(function(rows){
+app.get("/user", function(req, res){
+  getUserData(req.query.user, function(rows){
+    if(rows){
+      res.send(JSON.stringify(rows))
+    } else {
+      res.send(null);
+    }
+  });
+});
+
+app.get("/user/*", function(req,res){
+  res.sendFile('user.html', { root: path.join(__dirname, '../public') });
+});
+
+app.get("/global", function(req,res){
+
+  getLinks(null, function(rows){
 
     if(rows){
       res.send(JSON.stringify(rows))
@@ -95,29 +120,32 @@ app.get("/files", function(req,res){
   });
 });
 
-app.post("/upload", uploader, function(req,res){
+app.get("/links", function(req,res){
 
-  var pid = '10000' + parseInt(Math.random() * 10000000);
+  getLinks(req.query.user, function(rows){
 
-  uploadToS3(req.files[0], pid, function (err, data) {
-    if (err) {
-      console.error(err);
-      return res.send(null).end();
+    if(rows){
+      res.send(JSON.stringify(rows))
+    } else {
+      res.send(null);
     }
 
-    var response_obj = {
-      filename: req.files[0].originalname,
-      mimetype: req.files[0].mimetype,
-      url: data.Location,
-      time: Math.floor(Date.now() / 1000)
-    };
-
-    res.send(JSON.stringify(response_obj)).end();
-
-    //async
-    storeFile(response_obj);
+    res.end();
 
   });
+});
+
+app.post("/links", function(req,res){
+
+  var response_obj = {
+    url: req.body.link,
+    time: Math.floor(Date.now() / 1000)
+  };
+
+  res.send(JSON.stringify(response_obj)).end()
+
+  storeLink(req.body.link, req.body.user);
+
 });
 
 var port = process.env.PORT !== undefined ? process.env.PORT : null;
