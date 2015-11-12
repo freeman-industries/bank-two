@@ -1,6 +1,6 @@
 {
   "name": "Bank",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "scripts": {
     "start": "node ./server/server.js",
     "deploy": "node -e \"require('grunt').tasks(['deploy']);\""
