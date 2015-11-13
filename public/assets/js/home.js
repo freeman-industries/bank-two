@@ -23,4 +23,4 @@ var init = function(){
 
 init();
 
-_bank.alert("Welcome to Bank 2. Posting links from the homepage doesn't work yet. Go to your profile at http://bank-two.elasticbeanstalk.com/user/XXXX to post. If you don't have an account, ask Nabil.")
+_bank.alert("Welcome to Bank 2. Posting links from the homepage doesn't work yet. Go to your profile at http://bank.instafork.com/user/XXXX to post. If you don't have an account, ask Nabil.")
