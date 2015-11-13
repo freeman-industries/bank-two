@@ -44,9 +44,9 @@ var getLinks = function(user, callback){
   var query;
 
   if(user !== null){
-    query = 'SELECT time, url FROM `links` WHERE user=(SELECT id FROM users WHERE name=' + connection.escape(user) + ');'
+    query = 'SELECT time, title, url FROM `links` WHERE user=(SELECT id FROM users WHERE name=' + connection.escape(user) + ');'
   } else {
-    query = 'SELECT links.url, links.time, users.name, users.email FROM `links` LEFT JOIN `users` ON links.user = users.id ORDER BY links.id'
+    query = 'SELECT links.title, links.url, links.time, users.name, users.email FROM `links` LEFT JOIN `users` ON links.user = users.id ORDER BY links.id'
   }
 
   connection.query(query, function(err, rows, fields) {
@@ -63,11 +63,15 @@ var getLinks = function(user, callback){
   });
 }
 
-var storeLink = function(url, user){
+var storeLink = function(title, url, user){
+  console.log(title, url, user);
+
   var connection = mysql.createConnection(db_config);
   connection.connect();
 
-  var user_query = "INSERT INTO `links` (`time`, `url`, `user`) VALUES (UNIX_TIMESTAMP(), " + connection.escape(url) + ", (SELECT id FROM users WHERE name=" + connection.escape(user) + "))";
+  var user_query = "INSERT INTO `links` (`time`, `title`, `url`, `user`) VALUES (UNIX_TIMESTAMP(), " + connection.escape(title) + ", " + connection.escape(url) + ", (SELECT id FROM users WHERE name=" + connection.escape(user) + "))";
+
+  console.log(user_query);
 
   connection.query(user_query, function(err, rows, fields) {
     if (err) throw err;
@@ -144,7 +148,7 @@ app.post("/links", function(req,res){
 
   res.send(JSON.stringify(response_obj)).end()
 
-  storeLink(req.body.link, req.body.user);
+  storeLink(req.body.title, req.body.link, req.body.user);
 
 });
 

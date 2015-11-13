@@ -9,6 +9,8 @@
 </head>
 <body>
 
+  <div class="overlay"></div>
+
   <header>
     <a href="/">
       <div class="logo">
@@ -17,7 +19,17 @@
     </a>
 
     <div class="central">
-      <button class="new-link">Post a new link</button>
+      <button class="new-link">Post a new link <span>▾</span></button>
+
+      <form class="new-form">
+        
+        <input name="title" type="text" required placeholder="Title">
+        <input name="url" type="url" required placeholder="Link">
+        <button>
+          Post
+        </button>
+
+      </form>
     </div>
   </header>
 

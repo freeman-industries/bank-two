@@ -32,11 +32,26 @@ _bank.makeTile = function(data){
   var a = document.createElement("a");
   a.href = data.url;
   a.setAttribute("target", "_blank");
-  a.innerHTML = data.url;
+  a.innerHTML = (data.title !== "") ? data.title : data.url;
+
+  console.log(data);
 
   tile.appendChild(a);
 
+  var domain = document.createElement("a")
+  domain.href = data.url;
+
+  var hostname = domain.hostname;
+  hostname = hostname.replace("www.", "");
+
+  var span = document.createElement("span");
+  span.className = "domain";
+  span.innerHTML = hostname;
+
+  tile.appendChild(span);
+
   if(data.name !== undefined){
+
     var meta = document.createElement("div");
     meta.className = "meta";
     meta.innerHTML = "<a href='/user/" + data.name + "'><img src='" + data.image + "'>" + data.name + "</a>";
@@ -52,7 +67,7 @@ _bank.alert = function(message){
   var alert = document.querySelector(".alert");
 
   if(alert){
-    
+
   } else {
     var alert = document.createElement("div");
     alert.className = "alert";
@@ -60,7 +75,7 @@ _bank.alert = function(message){
     document.body.insertBefore(alert, document.querySelector("header").nextSibling);
   }
 
-  alert.innerHTML = message + " <a href='#'>Send feedback</a>";
+  alert.innerHTML = message + " <br><a href='https://twitter.com/intent/tweet?in_reply_to=665125802141483008' target='_blank'>Send feedback</a>";
 }
 
 
@@ -110,40 +125,57 @@ _bank.renderLinks = function(){
   links_view.style.visibility = "visible";
 }
 
+
+var overlay = document.querySelector(".overlay");
+var post_open_button = document.querySelector(".new-link");
+var post_form = document.querySelector(".central .new-form");
+
 document.querySelector(".new-link").addEventListener("click", function(){
-  var prompt = window.prompt("Type or paste your URL here...", "http://");
+  if(post_form.style.display == "block"){
+    post_form.style.display = "none";
+    overlay.style.display = "none";
 
-
-  var stringStartsWith = function(string, prefix) {
-      return string.slice(0, prefix.length) == prefix;
-  }
-
-
-  if( stringStartsWith(prompt, "http://") || stringStartsWith(prompt, "https://") ){
-
-    // now post a new XHR request
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/links');
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-
-      if(!e.target.responseText){
-        console.log("ERRO ERROR ERRORO");
-        return;
-      }
-
-      var response = JSON.parse(e.target.responseText);
-
-      window._links.push(response);
-
-      _bank.renderLinks();
-
-    };
-
-    xhr.send("link=" + prompt + "&user=" + window.location.pathname.replace("/user/", "") );
-
+    post_open_button.classList.remove("open");
   } else {
-    _bank.alert("We only support http:// and https:// links for now.");
+    post_form.style.display = "block";
+    overlay.style.display = "block";
+
+    post_form.querySelector("input").focus();
+
+    post_open_button.classList.add("open");
   }
+});
+
+post_form.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  var title = post_form.querySelector("[name=title]");
+  var url = post_form.querySelector("[name=url]");
+
+  // now post a new XHR request
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/links');
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+
+    if(!e.target.responseText){
+      console.log("ERRO ERROR ERRORO");
+      return;
+    }
+
+    var response = JSON.parse(e.target.responseText);
+
+    window._links.push(response);
+
+    _bank.renderLinks();
+
+    post_form.style.display = "none";
+    overlay.style.display = "none";
+
+  };
+
+  xhr.send( "title=" + encodeURIComponent(title.value) + "&link=" + encodeURIComponent(url.value) + "&user=" + encodeURIComponent(window.location.pathname.replace("/user/", "")) );
+
+
 
 });
